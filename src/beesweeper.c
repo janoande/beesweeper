@@ -8,6 +8,8 @@
 #include<stdbool.h>
 #include<time.h>
 
+#define FRAME_RATE 1000/60
+
 #define SCREEN_WIDTH 900
 #define SCREEN_HEIGHT 620
 
@@ -332,6 +334,7 @@ void game_loop (SDL_Renderer *renderer) {
         bool quit = false;
         int x, y;
         Game game = {0};
+        uint32_t frame_ticks = SDL_GetTicks();
 
         new_game(&game);
 
@@ -367,13 +370,16 @@ void game_loop (SDL_Renderer *renderer) {
                             if (!game.found_bee)
                                     handle_click(x, y, &game);
                             break;
-                    /* case SDL_MOUSEMOTION: */
-                    /*         SDL_GetMouseState(&x, &y); */
-                    /*         update_hover_status(x, y, game.honeycomb); */
-                    /*         break; */
-            default: continue; break;
+                    case SDL_MOUSEMOTION:
+                            SDL_GetMouseState(&x, &y);
+                            update_hover_status(x, y, game.honeycomb);
+                            break;
+                    default: break;
             }
-            draw_game(&game, renderer);
+            if (SDL_GetTicks() - frame_ticks >= FRAME_RATE) {
+                draw_game(&game, renderer);
+                frame_ticks = SDL_GetTicks();
+            }
         }
         free_hexagon_board(game.honeycomb);
         TTF_CloseFont(font);
