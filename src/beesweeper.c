@@ -13,8 +13,9 @@
 
 #define BEE_COUNT 14
 
-#define FONT "FreeSans.ttf"
-#define BEE_IMG "bee.png"
+#define RES_PATH "res/"
+#define FONT RES_PATH "FreeSans.ttf"
+#define BEE_IMG RES_PATH "bee.png"
 
 /* TODO: this may be changed dynamically when the screen is resized */
 #define HEXAGON_RADIUS 40
