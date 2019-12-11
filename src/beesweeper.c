@@ -345,37 +345,35 @@ void game_loop (SDL_Renderer *renderer) {
         
         draw_game(&game, renderer);
 
-        while(!quit){
-            while (SDL_PollEvent(&event)){
-                        switch(event.type) {
-                                case SDL_QUIT:
-                                        quit = true;
-                                        break;
-                                case SDL_KEYDOWN:
-                                        switch( event.key.keysym.sym ){
-                                                case SDLK_q:
-                                                        puts("bye!");
-                                                        quit = true;
-                                                        break;
-                                                case SDLK_RETURN:
-                                                        new_game(&game);
-                                                default:
-                                                        break;
-                                        }
-                                        break;
-                                case SDL_MOUSEBUTTONDOWN:
-                                        SDL_GetMouseState(&x, &y);
-                                        if (!game.found_bee)
-                                                handle_click(x, y, &game);
-                                        break;
-                                /* case SDL_MOUSEMOTION: */
-                                /*         SDL_GetMouseState(&x, &y); */
-                                /*         update_hover_status(x, y, game.honeycomb); */
-                                /*         break; */
-                        default: continue; break;
-                        }
-                        draw_game(&game, renderer);
-                }
+        while (!quit && SDL_WaitEvent(&event)) {
+            switch(event.type) {
+                    case SDL_QUIT:
+                            quit = true;
+                            break;
+                    case SDL_KEYDOWN:
+                            switch( event.key.keysym.sym ){
+                                    case SDLK_q:
+                                            puts("bye!");
+                                            quit = true;
+                                            break;
+                                    case SDLK_RETURN:
+                                            new_game(&game);
+                                    default:
+                                            break;
+                            }
+                            break;
+                    case SDL_MOUSEBUTTONDOWN:
+                            SDL_GetMouseState(&x, &y);
+                            if (!game.found_bee)
+                                    handle_click(x, y, &game);
+                            break;
+                    /* case SDL_MOUSEMOTION: */
+                    /*         SDL_GetMouseState(&x, &y); */
+                    /*         update_hover_status(x, y, game.honeycomb); */
+                    /*         break; */
+            default: continue; break;
+            }
+            draw_game(&game, renderer);
         }
         free_hexagon_board(game.honeycomb);
         TTF_CloseFont(font);
