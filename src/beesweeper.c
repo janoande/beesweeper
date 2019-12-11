@@ -310,6 +310,23 @@ void new_game(Game *game) {
         game->found_bee = false;
 }
 
+void draw_game(Game *game, SDL_Renderer *renderer) {
+    if (game->found_bee) {
+            draw_hexagon_board(renderer, game->honeycomb);
+            display_msg(renderer, font, "You got stung! Press Enter to try a new honeycomb.");
+    }
+    else if (game->cells_shown + BEE_COUNT == HEXAGON_X_TOTAL_NUM * HEXAGON_Y_TOTAL_NUM) {
+            reveal_all(game->honeycomb);
+            draw_hexagon_board(renderer, game->honeycomb);
+            display_msg(renderer, font, "You sweeped 'em all! Press Enter to try a new honeycomb.");
+    }
+    else 
+            draw_hexagon_board(renderer, game->honeycomb);
+
+    SDL_RenderPresent(renderer);
+    
+}
+
 void game_loop (SDL_Renderer *renderer) {
         SDL_Event event;
         bool quit = false;
@@ -325,23 +342,11 @@ void game_loop (SDL_Renderer *renderer) {
 
         beeimage = IMG_Load(BEE_IMG);
         beetexture = SDL_CreateTextureFromSurface(renderer, beeimage);
+        
+        draw_game(&game, renderer);
 
         while(!quit){
             while (SDL_PollEvent(&event)){
-                        if (game.found_bee) {
-                                draw_hexagon_board(renderer, game.honeycomb);
-                                display_msg(renderer, font, "You got stung! Press Enter to try a new honeycomb.");
-                        }
-                        else if (game.cells_shown + BEE_COUNT == HEXAGON_X_TOTAL_NUM * HEXAGON_Y_TOTAL_NUM) {
-                                reveal_all(game.honeycomb);
-                                draw_hexagon_board(renderer, game.honeycomb);
-                                display_msg(renderer, font, "You sweeped 'em all! Press Enter to try a new honeycomb.");
-                        }
-                        else 
-                                draw_hexagon_board(renderer, game.honeycomb);
-
-                        SDL_RenderPresent(renderer);
-
                         switch(event.type) {
                                 case SDL_QUIT:
                                         quit = true;
@@ -367,7 +372,9 @@ void game_loop (SDL_Renderer *renderer) {
                                         SDL_GetMouseState(&x, &y);
                                         update_hover_status(x, y, game.honeycomb);
                                         break;
+                        default: continue; break;
                         }
+                        draw_game(&game, renderer);
                 }
         }
         free_hexagon_board(game.honeycomb);
