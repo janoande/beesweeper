@@ -368,10 +368,10 @@ void game_loop (SDL_Renderer *renderer) {
                                         if (!game.found_bee)
                                                 handle_click(x, y, &game);
                                         break;
-                                case SDL_MOUSEMOTION:
-                                        SDL_GetMouseState(&x, &y);
-                                        update_hover_status(x, y, game.honeycomb);
-                                        break;
+                                /* case SDL_MOUSEMOTION: */
+                                /*         SDL_GetMouseState(&x, &y); */
+                                /*         update_hover_status(x, y, game.honeycomb); */
+                                /*         break; */
                         default: continue; break;
                         }
                         draw_game(&game, renderer);
